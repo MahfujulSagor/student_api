@@ -28,14 +28,14 @@ go.work.sum
 .env
 
 # Config file
-config/*.yaml
+/config/*.yaml
 
 # Logs
-logs/*
+/logs/*
 *.log
 
 # db file
-db/*
+/db/*
 *.db
 
 # Editor/IDE
