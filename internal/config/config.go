@@ -20,7 +20,7 @@ type LoggingConfig struct {
 
 type Config struct {
 	Env              string `yaml:"env" env:"ENV" env-required:"true" env-default:"production"`
-	StoragePath      string `yaml:"storage_path" env-required:"true"`
+	DBPath           string `yaml:"db_path" env-required:"true"`
 	HTTPServerConfig `yaml:"http_server"`
 	LoggingConfig    `yaml:"logging"`
 }
