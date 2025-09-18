@@ -1,8 +1,0 @@
-env: "dev"
-storage_path: "db/storage.db"
-http_server:
-  host: "localhost"
-  port: 8080
-logging:
-  level: "debug"
-  file: "logs/app.log"
