@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github/mahfujulsagor/student_api/internal/config"
+	"github/mahfujulsagor/student_api/internal/http/handlers/student"
 	"github/mahfujulsagor/student_api/internal/logger"
 	"net/http"
 	"os"
@@ -24,14 +25,14 @@ func main() {
 	//? Setup mux
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /", handleRoot)
+	//? Setup routes
+	mux.HandleFunc("POST /api/students", student.Create())
 
 	//? Setup server
 	server := http.Server{
 		Addr:    fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
 		Handler: mux,
 	}
-
 	logger.Info.Println("Server started on", server.Addr)
 
 	//? Start server and listen for shutdown signal
@@ -54,10 +55,5 @@ func main() {
 	if err := server.Shutdown(ctx); err != nil {
 		logger.Error.Fatal("Server forced to shutdown:", err)
 	}
-
 	logger.Info.Println("Server shut down gracefully")
-}
-
-func handleRoot(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome to the Student API")
 }

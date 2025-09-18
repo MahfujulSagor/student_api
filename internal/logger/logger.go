@@ -1,3 +1,4 @@
+// ! Optimize for production
 package logger
 
 import (
