@@ -31,11 +31,11 @@ go.work.sum
 config/*.yaml
 
 # Logs
-logs
+logs/*
 *.log
 
 # db file
-db
+db/*
 *.db
 
 # Editor/IDE
