@@ -17,7 +17,7 @@ const (
 
 type Response struct {
 	Status string `json:"status"`
-	Error  string `json:"message"`
+	Error  string `json:"error"`
 }
 
 func WriteJson(w http.ResponseWriter, status int, data interface{}) error {

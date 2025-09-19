@@ -1,7 +1,7 @@
-// ! Optimize for production
 package logger
 
 import (
+	"github/mahfujulsagor/student_api/internal/config"
 	"io"
 	"log"
 	"os"
@@ -9,11 +9,20 @@ import (
 )
 
 var (
+	Debug *log.Logger
 	Info  *log.Logger
+	Warn  *log.Logger
 	Error *log.Logger
 )
 
-func Init() {
+func Init(cfg *config.Config, env string) {
+	//? Determine log file path
+	logFilePath := cfg.LoggingConfig.File
+	if logFilePath == "" {
+		logFilePath = "logs/app.log"
+	}
+
+	//? Ensure log directory exists
 	if err := os.MkdirAll("logs", 0755); err != nil {
 		log.Fatal("Failed to create logs directory:", err)
 	}
@@ -23,8 +32,18 @@ func Init() {
 		log.Fatal("Failed to open log file:", err)
 	}
 
-	//? Define loggers
-	mw := io.MultiWriter(os.Stdout, logFile)
-	Info = log.New(mw, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-	Error = log.New(mw, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+	//? In development, log to both console and file
+	var writer io.Writer
+	if env == "development" {
+		writer = io.MultiWriter(os.Stdout, logFile)
+	} else {
+		writer = logFile
+	}
+
+	//? Define loggers with standard flags
+	flags := log.Ldate | log.Ltime | log.Lshortfile
+	Debug = log.New(writer, "DEBUG: ", flags)
+	Info = log.New(writer, "INFO: ", flags)
+	Warn = log.New(writer, "WARN: ", flags)
+	Error = log.New(writer, "ERROR: ", flags)
 }

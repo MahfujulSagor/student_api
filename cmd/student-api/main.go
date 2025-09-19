@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github/mahfujulsagor/student_api/internal/config"
+	"github/mahfujulsagor/student_api/internal/db/sqlite"
 	"github/mahfujulsagor/student_api/internal/http/handlers/student"
 	"github/mahfujulsagor/student_api/internal/logger"
 	"net/http"
@@ -18,24 +19,30 @@ func main() {
 	cfg := config.MustLoad()
 
 	//? Initialize logger
-	logger.Init()
+	logger.Init(cfg, cfg.Env)
 
-	//? Connect to DB
+	//? Setup database
+	db, err := sqlite.New(cfg)
+	if err != nil {
+		logger.Error.Fatal("Failed to connect to database:", err)
+		return
+	}
+	logger.Info.Println("Connected to database", "env:", cfg.Env)
 
 	//? Setup mux
 	mux := http.NewServeMux()
 
 	//? Setup routes
-	mux.HandleFunc("POST /api/students", student.Create())
+	mux.HandleFunc("POST /api/students", student.New(db))
 
 	//? Setup server
 	server := http.Server{
 		Addr:    fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
 		Handler: mux,
 	}
-	logger.Info.Println("Server started on", server.Addr)
 
 	//? Start server and listen for shutdown signal
+	logger.Info.Println("Server started on", server.Addr)
 	done := make(chan os.Signal, 1)
 
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)

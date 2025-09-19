@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github/mahfujulsagor/student_api/internal/db"
 	"github/mahfujulsagor/student_api/internal/logger"
 	"github/mahfujulsagor/student_api/internal/types"
 	"github/mahfujulsagor/student_api/internal/utils/response"
@@ -13,7 +14,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-func Create() http.HandlerFunc {
+func New(db db.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger.Info.Println("Create student handler called")
 
@@ -43,10 +44,19 @@ func Create() http.HandlerFunc {
 		}
 
 		//* Create the student in DB
+		id, err := db.CreateStudent(student.Name, student.Email, student.Age)
+		if err != nil {
+			response.WriteJson(w, http.StatusInternalServerError, response.GeneralError(err))
+			logger.Error.Println("Error creating student:", err)
+			return
+		}
 
+		logger.Info.Println("Student created with ID:", id)
+
+		//? Send response
 		response.WriteJson(w, http.StatusCreated, map[string]string{
 			"success": "OK",
-			"message": fmt.Sprintf("Student %s created successfully", student.Name),
+			"message": fmt.Sprintf("Student created with ID %d", id),
 		})
 	}
 }
