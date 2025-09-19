@@ -1,5 +1,7 @@
 # Student Management API
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+
 A simple **Student Management REST API** built with [Go](https://go.dev/) and [SQLite](https://www.sqlite.org/).
 This project demonstrates clean architecture, structured logging, graceful shutdown, and modular design.
 
