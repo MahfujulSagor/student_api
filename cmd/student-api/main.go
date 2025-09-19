@@ -34,6 +34,7 @@ func main() {
 
 	//? Setup routes
 	mux.HandleFunc("POST /api/students", student.New(db))
+	mux.HandleFunc("GET /api/students/{id}", student.GetByID(db))
 
 	//? Setup server
 	server := http.Server{
