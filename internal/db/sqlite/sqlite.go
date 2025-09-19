@@ -80,3 +80,56 @@ func (s *SQLite) GetStudentByID(id int64) (types.Student, error) {
 
 	return student, nil
 }
+
+// ? GetStudents retrieves a list of students with pagination
+func (s *SQLite) GetStudents(limit int, offset int) ([]types.Student, error) {
+	//? Prepare statement to prevent SQL injection
+	stmt, err := s.DB.Prepare("SELECT id, name, email, age FROM students LIMIT ? OFFSET ?")
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	//? Execute the query
+	rows, err := stmt.Query(limit, offset)
+	if err != nil {
+		return nil, fmt.Errorf("query execution error: %w", err)
+	}
+	defer rows.Close()
+
+	//? Parse results into slice of students
+	var students []types.Student
+	for rows.Next() {
+		var student types.Student
+		err := rows.Scan(&student.ID, &student.Name, &student.Email, &student.Age)
+		if err != nil {
+			return nil, fmt.Errorf("row scan error: %w", err)
+		}
+		students = append(students, student)
+	}
+
+	//? Check for errors from iterating over rows
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("rows iteration error: %w", err)
+	}
+
+	return students, nil
+}
+
+// ? UpdateStudentByID updates a student by ID from the database
+func (s *SQLite) UpdateStudentByID(id int64, name string, email string, age int) error {
+	//? Prepare statement to prevent SQL injection
+	stmt, err := s.DB.Prepare("UPDATE students SET name = ?, email = ?, age = ? WHERE id = ?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	//? Execute the statement
+	_, err = stmt.Exec(name, email, age, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
