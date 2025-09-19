@@ -133,3 +133,21 @@ func (s *SQLite) UpdateStudentByID(id int64, name string, email string, age int)
 
 	return nil
 }
+
+// ? DeleteStudentByID deletes a student by ID from the database
+func (s *SQLite) DeleteStudentByID(id int64) error {
+	//? Prepare statement to prevent SQL injection
+	stmt, err := s.DB.Prepare("DELETE FROM students WHERE id = ?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	//? Execute the statement
+	_, err = stmt.Exec(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

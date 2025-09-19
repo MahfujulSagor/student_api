@@ -37,6 +37,7 @@ func main() {
 	mux.HandleFunc("GET /api/students/{id}", student.GetByID(db))
 	mux.HandleFunc("GET /api/students", student.GetList(db))
 	mux.HandleFunc("PUT /api/students/{id}", student.UpdateByID(db))
+	mux.HandleFunc("DELETE /api/students/{id}", student.DeleteByID(db))
 
 	//? Setup server
 	server := http.Server{
