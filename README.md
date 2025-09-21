@@ -68,7 +68,7 @@ CONFIG_PATH="config/config.yaml"
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/mahfujulsagor/student_api.git
+git clone https://github.com/MahfujulSagor/student_api.git
 cd student_api
 ```
 
@@ -85,7 +85,7 @@ go run cmd/student_api/main.go
 ```
 
 Server runs at:
-👉 `http:localhost:8080`
+👉 `http://localhost:8080`
 
 ---
 
@@ -98,7 +98,7 @@ go run cmd/student_api/main.go -config config/config.yaml
 ```
 
 Server runs at:
-👉 `http:localhost:8080`
+👉 `http://localhost:8080`
 
 ---
 
